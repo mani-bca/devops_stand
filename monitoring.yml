@@ -1,0 +1,15 @@
+---
+- hosts: prometheus_grafana
+  become: yes
+  gather_facts: yes
+  roles:
+    - /home/ubuntu/devops_stand/grafana
+    - /home/ubuntu/devops_stand/prometheus
+
+- hosts: node
+  become: yes
+  gather_facts: yes
+  roles:
+    - /home/ubuntu/devops_stand/node-exporter
+
+

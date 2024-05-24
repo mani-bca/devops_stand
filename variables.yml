@@ -1,0 +1,13 @@
+---
+# vars for prometheus
+prometheus_version: 2.28.1
+prometheus_user: prometheus
+
+# vars for node exporter
+node_exporter_version: 1.2.0
+node_exporter_user: node_exporter
+
+# vars for Grafana
+grafana_key: "https://packages.grafana.com/gpg.key"
+grafana_repo: "deb https://packages.grafana.com/oss/deb stable main"
+
