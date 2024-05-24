@@ -1,11 +1,13 @@
 apiVersion: 1
-#=====================================================================
-{% for item in datasources %}
-#========================={{ item.name }}==================================
+
 deleteDatasources:
+{% for item in datasources %}
   - name: {{ item.name }}
     orgId: 1
+{% endfor %}
+
 datasources:
+{% for item in datasources %}
   - name: {{ item.name }}
     type: prometheus
     orgId: 1
@@ -13,7 +15,5 @@ datasources:
     access: proxy
     isDefault: {{ item.default }}
     editable: {{ item.editable }}
-
-#=====================================================================
-
 {% endfor %}
+
