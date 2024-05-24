@@ -2,13 +2,6 @@ global:
   scrape_interval:     15s # Set the scrape interval to every 15 seconds. Default is every 1 minute.
   evaluation_interval: 15s # Evaluate rules every 15 seconds. The default is every 1 minute.
 
-{% if groups['prometheus_grafana']|length %}
-alerting:
-  alertmanagers:
-  - static_configs:
-    - targets: [ '{{groups['prometheus_grafana']|join(':9093\', \'')}}:9093' ]
-{% endif %}
-
 rule_files:
   - "rules/node_exporter_rules.yml"
 
@@ -19,18 +12,4 @@ scrape_configs:
     - targets: [ '{{groups['node']|join(':9100\', \'')}}:9100' ]
 {% endif %}
 
-{% if URLs|length %}
-  - job_name: 'URLs'
-    metrics_path: /probe
-    params:
-      module: [http_2xx]
-    static_configs:
-      - targets: [ {{URLs}} ]
-    relabel_configs:
-      - source_labels: [__address__]
-        target_label: __param_target
-      - source_labels: [__param_target]
-        target_label: instance
-      - target_label: __address__
-        replacement: 127.0.0.1:9115
-{% endif %}
+
