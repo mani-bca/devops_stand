@@ -13,16 +13,10 @@ rule_files:
   - "rules/node_exporter_rules.yml"
 
 scrape_configs:
-{% if groups['node_and_process_exporters']|length %}
+{% if groups['node']|length %}
   - job_name: 'node_exporter'
     static_configs:
-    - targets: [ '{{groups['node_and_process_exporters']|join(':9100\', \'')}}:9100' ]
-{% endif %}
-
-{% if groups['apache_exporter']|length %}
-  - job_name: 'apache_exporter'
-    static_configs:
-    - targets: [ '{{groups['apache_exporter']|join(':9117\', \'')}}:9117' ]
+    - targets: [ '{{groups['node']|join(':9100\', \'')}}:9100' ]
 {% endif %}
 
 {% if URLs|length %}
