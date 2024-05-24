@@ -58,10 +58,7 @@
     group: grafana
     mode: 0644
   with_items:
-    - mongodb_dashboard.json
     - infra_dashboard.json
-    - process_exporter.json
-    - kafka_dashboard.json
   notify: Restart grafana
 
 - name: Just force systemd to reread configs
