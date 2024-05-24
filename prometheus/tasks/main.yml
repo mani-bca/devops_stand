@@ -61,8 +61,6 @@
     dest: '/etc/prometheus/rules/{{ item }}'
   with_items:
     - node_exporter_rules.yml
-    - blackbox_exporter_rules.yml
-    - process_exporter_rules.yml
   notify: Restart service
 
 - name: Copy prometheus service
