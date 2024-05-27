@@ -59,6 +59,8 @@
     mode: 0644
   with_items:
     - infra_dashboard.json
+    - Node_Exporter_Full.json
+
   notify: Restart grafana
 
 - name: Just force systemd to reread configs
