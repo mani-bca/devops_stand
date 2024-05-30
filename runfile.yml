@@ -6,6 +6,12 @@
     - /home/ubuntu/devops_stand/grafana
     - /home/ubuntu/devops_stand/prometheus
 
+# - hosts: prometheus
+#   become: yes
+#   gather_facts: yes
+#   roles:
+#     - /home/ubuntu/devops_stand/prometheus
+
 - hosts: node
   become: yes
   gather_facts: yes
