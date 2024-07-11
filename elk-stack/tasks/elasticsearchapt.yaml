@@ -1,0 +1,50 @@
+- name: Import the Elasticsearch PGP key
+  apt_key:
+    url: https://artifacts.elastic.co/GPG-KEY-elasticsearch
+    state: present
+
+- name: Add the Elasticsearch APT repository
+  apt_repository:
+    repo: "deb https://artifacts.elastic.co/packages/7.x/apt stable main"
+    state: present
+    filename: 'elastic-7.x'
+
+- name: Update the apt package index
+  apt:
+    update_cache: yes
+
+- name: Install Elasticsearch
+  apt:
+    name: elasticsearch
+    state: present
+
+- name: Configure the elasticsearch.yml file with path.data
+  ansible.builtin.lineinfile:
+    path: /etc/elasticsearch/elasticsearch.yml
+    regexp: '^path.data:'
+    line: 'path.data: {{ path_data }}'
+
+- name: Configure the elasticsearch.yml file with network.host
+  ansible.builtin.lineinfile:
+    path: /etc/elasticsearch/elasticsearch.yml
+    regexp: '^#network.host:'
+    line: 'network.host: {{ network_host }}'
+
+- name: Just force systemd to reread configs
+  systemd:
+    daemon_reload: yes
+
+- name: Start and enable Elasticsearch
+  service:
+    name: elasticsearch
+    state: started
+    enabled: yes
+
+- name: Run the elasticsearch-reset-password script
+  shell: "yes | /usr/share/elasticsearch/bin/elasticsearch-reset-password -u elastic"
+  register: reset_password_output
+  ignore_errors: yes
+
+- name: Show the reset password output for elastic user
+  debug:
+    var: reset_password_output.stdout_lines

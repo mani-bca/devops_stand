@@ -1,0 +1,44 @@
+- name: import public signing key
+  rpm_key:
+    state: present
+    key: "{{ rpm_key_elk }}"
+
+- name: create elasticsearch repo file
+  template:
+    src: "elasticsearch.repo"
+    dest: "{{ elasticsearch_repo_path }}"
+
+- name: install elasticsearch
+  yum:
+    name: elasticsearch
+    enablerepo: elasticsearch
+    state: present
+- name: configuring the elasticearch.yml file with path
+  ansible.builtin.lineinfile:
+    path: /etc/elasticsearch/elasticsearch.yml
+    regexp: '^path.data:'
+    line: 'path.data: {{ path_data }}'
+- name: configuring the elasticearch.yml file with network.host
+  ansible.builtin.lineinfile:
+    path: /etc/elasticsearch/elasticsearch.yml
+    regexp: '^#network.host:'
+    line: 'network.host: {{ network_host }}'
+
+- name: Just force systemd to reread configs
+  systemd:
+    daemon_reload: yes
+
+- name: start and enable elasticsearch
+  service:
+    name: elasticsearch
+    state: started
+    enabled: yes
+
+- name: Run the elasticsearch-reset-password script
+  shell: "yes | /usr/share/elasticsearch/bin/elasticsearch-reset-password -u elastic"
+  register: reset_password_output
+  ignore_errors: yes  
+
+- name: Below are the reset password output for elastic user
+  debug:
+    var: reset_password_output.stdout_lines

@@ -1,11 +1,23 @@
-[prometheus_grafana]
-172.31.1.161 
+[monitoring-stack]
+13.201.90.101
 
-[node]
-172.31.8.95
+[logging-stack]
+65.0.132.241
 
 [all:vars]
 ansible_user=ubuntu
-ansible_ssh_private_key_file=/home/ubuntu/devops.pem.pem
+ansible_ssh_private_key_file=/home/manivasagan.p@optit.india/Downloads/ansdev.pem
 ansible_python_interpreter=/usr/bin/python3
 ansible_ssh_common_args='-o StrictHostKeyChecking=no'
+; ansible_user=ubuntu
+; ansible_ssh_private_key_file=/home/manivasagan.p@optit.india/Downloads/ansible.pem
+; ansible_python_interpreter=/usr/bin/python3
+; ansible_ssh_common_args='-o StrictHostKeyChecking=no'
+; [all:vars]
+; ansible_user=k8s
+; ansible_password=hello
+; ansible_python_interpreter=/usr/bin/python3
+; ansible_ssh_common_args='-o StrictHostKeyChecking=no'
+; ansible_become=true
+; ansible_become_method=sudo
+; ansible_become_password=hello

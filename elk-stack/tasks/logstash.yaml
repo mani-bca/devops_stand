@@ -1,0 +1,16 @@
+#play to install elasticearch
+- name: create logstash repo file
+  template:
+    src: "logstash.repo"
+    dest: "{{ logstash_repo_path }}"
+
+- name: install logstash
+  yum:
+    name: logstash
+    state: present
+
+- name: start and enable logstash
+  service:
+    name: logstash
+    state: started
+    enabled: yes

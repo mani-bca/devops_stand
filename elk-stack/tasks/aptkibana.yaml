@@ -1,0 +1,54 @@
+# Play to install Kibana
+- name: Import the Kibana PGP key
+  apt_key:
+    url: https://artifacts.elastic.co/GPG-KEY-elasticsearch
+    state: present
+
+- name: Add the Kibana APT repository
+  apt_repository:
+    repo: "deb https://artifacts.elastic.co/packages/7.x/apt stable main"
+    state: present
+    filename: 'elastic-7.x'
+
+- name: Update the apt package index
+  apt:
+    update_cache: yes
+
+- name: Install Kibana
+  apt:
+    name: kibana
+    state: present
+
+- name: Configure the kibana.yml file with server.host
+  ansible.builtin.lineinfile:
+    path: /etc/kibana/kibana.yml
+    regexp: '^#server.host:'
+    line: 'server.host: {{ server_host }}'
+
+- name: Configure the kibana.yml file with server.publicBaseUrl
+  ansible.builtin.lineinfile:
+    path: /etc/kibana/kibana.yml
+    regexp: '^#server.publicBaseUrl:'
+    line: 'server.publicBaseUrl: {{ server_publicBaseUrl }}'
+
+- name: Start and enable Kibana
+  service:
+    name: kibana
+    state: started
+    enabled: yes
+
+- name: Run the elasticsearch-create-enrollment script
+  shell: "/usr/share/elasticsearch/bin/elasticsearch-create-enrollment-token --scope kibana"
+  register: create_enrollment_output
+
+- name: Show the elasticsearch-create-enrollment output
+  debug:
+    var: create_enrollment_output.stdout_lines
+
+- name: Run the kibana-verification-code script
+  shell: "/usr/share/kibana/bin/kibana-verification-code"
+  register: kibana_verification_output
+
+- name: Show the kibana-verification-code output
+  debug:
+    var: kibana_verification_output.stdout_lines

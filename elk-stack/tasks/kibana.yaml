@@ -1,0 +1,49 @@
+#play to install kibana
+- name: create Kibana repo file
+  template:
+    src: "kibana.repo"
+    dest: "{{ kibana_repo_path }}"
+
+- name: install kibana
+  yum:
+    name: kibana
+    state: present
+- name: configuring the kibana file with server.host
+  ansible.builtin.lineinfile:
+    path: /etc/kibana/kibana.yml
+    regexp: '^#server.host:'
+    line: 'server.host: {{ server_host }}'
+- name: configuring the kibana.yml file with server.base.public.url
+  ansible.builtin.lineinfile:
+    path: /etc/kibana/kibana.yml
+    regexp: '^#server.publicBaseUrl:'
+    line: 'server.publicBaseUrl: {{ server_publicBaseUrl }}'
+
+- name: start and enable kibana
+  service:
+    name: kibana
+    state: started
+    enabled: yes
+
+- name: Run the elasticsearch-create-enrollement script
+  shell: "/usr/share/elasticsearch/bin/elasticsearch-create-enrollment-token --scope kibana"
+  register: create_enrollment_output
+
+- name: Below is the elastisearch-create-enrollemet
+  debug:
+    var: create_enrollment_output.stdout_lines
+
+- name: Run the kibana-verification-code script
+  shell: "/usr/share/kibana/bin/kibana-verification-code"
+  register: kibana_verification_output
+
+- name: Below is the kibana-verification-code
+  debug:
+    var: kibana_verification_output.stdout_lines      
+
+      # name: start and enable kibana 
+      # service:
+      #   name: kibana
+      #   state: started
+      #   enabled: yes
+

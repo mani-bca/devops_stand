@@ -1,0 +1,27 @@
+- name: Create Logstash repo file
+  template:
+    src: "logstash.repo.j2"
+    dest: "{{ logstash_repo_path }}"
+    owner: root
+    group: root
+    mode: 0644
+  notify: Update apt cache
+
+- name: Install Logstash
+  apt:
+    name: logstash
+    state: present
+  notify: Start Logstash
+
+
+- name: Start and enable Logstash
+  systemd:
+    name: logstash
+    state: started
+    enabled: yes
+
+handlers:
+  - name: Update apt cache
+    apt:
+      update_cache: yes
+      cache_valid_time: 3600

@@ -1,0 +1,25 @@
+
+# - name: play to instal elasticearch
+#   include: elasticsearch.yaml
+
+# - name: play to install logstash
+#   include: logstash.yaml
+
+# - name: play to install kibana
+#   include: kibana.yaml
+
+---
+- hosts: logging-stack
+  become: yes
+  gather_facts: yes
+  vars_files:
+    - /home/manivasagan.p@optit.india/Downloads/visul/git/devops_stand/elk-stack/vars/main.yaml
+  roles:
+    - /home/manivasagan.p@optit.india/Downloads/visul/git/devops_stand/elk-stack/tasks/aptkibana.yaml
+    - /home/manivasagan.p@optit.india/Downloads/visul/git/devops_stand/elk-stack/tasks/elasticsearchapt.yaml
+    - /home/manivasagan.p@optit.india/Downloads/visul/git/devops_stand/elk-stack/tasks/logstashapt.yaml
+# - hosts: prometheus
+#   become: yes
+#   gather_facts: yes
+#   roles:
+#     - /home/ubuntu/devops_stand/prometheus
